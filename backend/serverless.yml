@@ -1,0 +1,74 @@
+service: serverless-rest-fullstack-backend
+# frameworkVersion: "4.20.2"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'} # default stage
+  environment:
+    TABLE_NAME: ${self:service}-users-${self:provider.stage}
+    USERS_TABLE: ${self:custom.tableName}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - arn:aws:dynamodb:${opt:region, 'us-east-1'}:*:table/${self:provider.environment.TABLE_NAME}
+custom:
+  tableName: users
+plugins:
+  - serverless-offline
+functions:
+  createUser:
+    handler: src/handlers/createUser.create
+    events:
+      - http:
+          path: users
+          method: post
+  listUsers:
+    handler: src/handlers/listUsers.readAll
+    events:
+      - http:
+          path: users
+          method: get
+  getUser:
+    handler: src/handlers/getUser.read
+    events:
+      - http:
+          path: users/{userId}
+          method: get
+  updateUser:
+    handler: src/handlers/updateUser.update
+    events:
+      - http:
+          path: users/{userId}
+          method: patch
+  deleteUser:
+    handler: src/handlers/deleteUser.delete
+    events:
+      - http:
+          path: users/{userId}
+          method: delete
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        # TableName: ${self:provider.environment.TABLE_NAME}
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
