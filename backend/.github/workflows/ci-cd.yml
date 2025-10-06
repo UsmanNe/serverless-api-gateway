@@ -1,0 +1,42 @@
+name: CI/CD Deploy Backend
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+
+env:
+  SERVERLESS_DIR: backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.19
+          
+      - name: Install backend dependencies
+        working-directory: ${{ env.SERVERLESS_DIR }}
+        run: npm ci
+
+      - name: Configure AWS credentials (access keys)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy Serverless
+        working-directory: ${{ env.SERVERLESS_DIR }}
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+            npx serverless deploy --stage prod --region ${{ secrets.AWS_REGION }} --verbose
+          else
+            npx serverless deploy --stage dev --region ${{ secrets.AWS_REGION }} --verbose
+          fi

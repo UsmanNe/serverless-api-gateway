@@ -9,6 +9,7 @@ provider:
   environment:
     TABLE_NAME: ${self:service}-users-${self:provider.stage}
     USERS_TABLE: ${self:custom.tableName}
+    SERVERLESS_DIR: backend
   iam:
     role:
       statements:
