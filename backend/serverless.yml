@@ -1,11 +1,10 @@
 service: serverless-rest-fullstack-backend
-# frameworkVersion: "4.20.2"
 
 provider:
   name: aws
   runtime: nodejs18.x
   region: ${opt:region, 'us-east-1'}
-  stage: ${opt:stage, 'dev'} # default stage
+  stage: ${opt:stage, 'dev'}
   environment:
     TABLE_NAME: ${self:service}-users-${self:provider.stage}
     SERVERLESS_DIR: backend
@@ -23,21 +22,21 @@ provider:
           Resource:
             - arn:aws:dynamodb:${opt:region, 'us-east-1'}:*:table/${self:provider.environment.TABLE_NAME}
 
-# Global CORS config for deployed frontend as well as local vite server
-cors:
-  origin:
-    - http://localhost:5173  
-    - https://serverless-api-gateway.vercel.app/
-  headers:
-    - Content-Type
-    - Authorization
-    - X-Amz-Date
-    - X-Api-Key
-    - X-Amz-Security-Token
-  allowCredentials: false
-
 plugins:
   - serverless-offline
+
+custom:
+  corsConfig:
+    origins:
+      - http://localhost:5173
+      - https://serverless-api-gateway.vercel.app
+    headers:
+      - Content-Type
+      - Authorization
+      - X-Amz-Date
+      - X-Api-Key
+      - X-Amz-Security-Token
+    allowCredentials: false
 
 functions:
   createUser:
@@ -46,30 +45,39 @@ functions:
       - http:
           path: users
           method: post
+          cors: ${self:custom.corsConfig}
+
   listUsers:
     handler: src/handlers/listUsers.readAll
     events:
       - http:
           path: users
           method: get
+          cors: ${self:custom.corsConfig}
+
   getUser:
     handler: src/handlers/getUser.read
     events:
       - http:
           path: users/{userId}
           method: get
+          cors: ${self:custom.corsConfig}
+
   updateUser:
     handler: src/handlers/updateUser.update
     events:
       - http:
           path: users/{userId}
           method: patch
+          cors: ${self:custom.corsConfig}
+
   deleteUser:
     handler: src/handlers/deleteUser.delete
     events:
       - http:
           path: users/{userId}
           method: delete
+          cors: ${self:custom.corsConfig}
 
 resources:
   Resources:
