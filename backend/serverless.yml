@@ -8,7 +8,6 @@ provider:
   stage: ${opt:stage, 'dev'} # default stage
   environment:
     TABLE_NAME: ${self:service}-users-${self:provider.stage}
-    USERS_TABLE: ${self:custom.tableName}
     SERVERLESS_DIR: backend
   iam:
     role:
@@ -23,10 +22,23 @@ provider:
             - dynamodb:DeleteItem
           Resource:
             - arn:aws:dynamodb:${opt:region, 'us-east-1'}:*:table/${self:provider.environment.TABLE_NAME}
-custom:
-  tableName: users
+
+# Global CORS config for deployed frontend as well as local vite server
+cors:
+  origin:
+    - http://localhost:5173  
+    - https://serverless-api-gateway.vercel.app/
+  headers:
+    - Content-Type
+    - Authorization
+    - X-Amz-Date
+    - X-Api-Key
+    - X-Amz-Security-Token
+  allowCredentials: false
+
 plugins:
   - serverless-offline
+
 functions:
   createUser:
     handler: src/handlers/createUser.create
@@ -34,32 +46,24 @@ functions:
       - http:
           path: users
           method: post
-
-          cors: true
   listUsers:
     handler: src/handlers/listUsers.readAll
     events:
       - http:
           path: users
           method: get
-
-          cors: true
   getUser:
     handler: src/handlers/getUser.read
     events:
       - http:
           path: users/{userId}
           method: get
-
-          cors: true
   updateUser:
     handler: src/handlers/updateUser.update
     events:
       - http:
           path: users/{userId}
           method: patch
-
-          cors: true
   deleteUser:
     handler: src/handlers/deleteUser.delete
     events:
@@ -67,15 +71,12 @@ functions:
           path: users/{userId}
           method: delete
 
-          cors: true
-
 resources:
   Resources:
     UsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        # TableName: ${self:provider.environment.TABLE_NAME}
-        TableName: ${self:custom.tableName}
+        TableName: ${self:provider.environment.TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S

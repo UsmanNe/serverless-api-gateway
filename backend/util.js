@@ -4,7 +4,7 @@ const { DynamoDBDocumentClient } = require("@aws-sdk/lib-dynamodb");
 // DynamoDB Setup
 const client = new DynamoDBClient();
 const docClient = DynamoDBDocumentClient.from(client);
-const tableName = process.env.USERS_TABLE;
+const tableName = process.env.TABLE_NAME;
 
 // Response Builder
 const buildResponse = (statusCode, data) => ({
