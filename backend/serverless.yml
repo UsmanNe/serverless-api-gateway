@@ -34,30 +34,40 @@ functions:
       - http:
           path: users
           method: post
+
+          cors: true
   listUsers:
     handler: src/handlers/listUsers.readAll
     events:
       - http:
           path: users
           method: get
+
+          cors: true
   getUser:
     handler: src/handlers/getUser.read
     events:
       - http:
           path: users/{userId}
           method: get
+
+          cors: true
   updateUser:
     handler: src/handlers/updateUser.update
     events:
       - http:
           path: users/{userId}
           method: patch
+
+          cors: true
   deleteUser:
     handler: src/handlers/deleteUser.delete
     events:
       - http:
           path: users/{userId}
           method: delete
+
+          cors: true
 
 resources:
   Resources:
