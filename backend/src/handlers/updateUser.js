@@ -14,7 +14,7 @@ module.exports.update = async (event) => {
   const { users } = body;
 
   // VALIDATION: Required field check "userId" 
-  if (!userId) return buildResponse(400, { error: '"userId" is required' });
+  if (!userId) return buildResponse(event, 400, { error: '"userId" is required' });
 
   // VALIDATION: All values must be strings
   const error = validateStringValues(users);
@@ -44,9 +44,9 @@ module.exports.update = async (event) => {
   // Attempting update user
   try {
     const { Attributes } = await docClient.send(new UpdateCommand(params));
-    return buildResponse(200, Attributes);
+    return buildResponse(event, 200, Attributes);
   } catch (err) {
     console.error(err);
-    return buildResponse(500, { error: "Could not update user" });
+    return buildResponse(event, 500, { error: "Could not update user" });
   }
 };
