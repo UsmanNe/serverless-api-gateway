@@ -11,7 +11,11 @@ module.exports.readAll = async (event) => {
     const { Items } = await docClient.send(new ScanCommand(params));
     return buildResponse(event, 200, Items);
   } catch (err) {
-    console.error(err);
+    if (process.env.NODE_ENV === "test") {
+      console.error("DynamoDB Error:", err.message);
+    } else {
+      console.error("DynamoDB Error:", err);
+    }
     return buildResponse(event, 500, { error: "Could not retrieve users" });
   }
 };

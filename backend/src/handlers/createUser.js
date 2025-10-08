@@ -26,7 +26,7 @@ module.exports.create = async (event) => {
   }
 
   // VALIDATIONS
-  let error = checkUsersObject(users)
+  let error = checkUsersObject(users);
   if (error) return error;
 
   error = validateRequiredFields(users, [
@@ -49,7 +49,11 @@ module.exports.create = async (event) => {
     await docClient.send(new PutCommand(params));
     return buildResponse(event, 201, users);
   } catch (err) {
-    console.error("DynamoDB Error:", err);
+    if (process.env.NODE_ENV === "test") {
+      console.error("DynamoDB Error:", err.message);
+    } else {
+      console.error("DynamoDB Error:", err);
+    }
     return buildResponse(event, 500, { error: "Could not create user" });
   }
 };

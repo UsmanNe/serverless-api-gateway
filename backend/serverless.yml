@@ -6,6 +6,7 @@ provider:
   region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'}
   environment:
+    NODE_ENV: ${self:provider.stage}
     TABLE_NAME: ${self:service}-users-${self:provider.stage}
     SERVERLESS_DIR: backend
   iam:

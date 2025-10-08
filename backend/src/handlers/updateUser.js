@@ -13,8 +13,9 @@ module.exports.update = async (event) => {
   const body = JSON.parse(event.body || "{}");
   const { users } = body;
 
-  // VALIDATION: Required field check "userId" 
-  if (!userId) return buildResponse(event, 400, { error: '"userId" is required' });
+  // VALIDATION: Required field check "userId"
+  if (!userId)
+    return buildResponse(event, 400, { error: '"userId" is required' });
 
   // VALIDATION: All values must be strings
   const error = validateStringValues(users);
@@ -46,7 +47,11 @@ module.exports.update = async (event) => {
     const { Attributes } = await docClient.send(new UpdateCommand(params));
     return buildResponse(event, 200, Attributes);
   } catch (err) {
-    console.error(err);
+    if (process.env.NODE_ENV === "test") {
+      console.error("DynamoDB Error:", err.message);
+    } else {
+      console.error("DynamoDB Error:", err);
+    }
     return buildResponse(event, 500, { error: "Could not update user" });
   }
 };
