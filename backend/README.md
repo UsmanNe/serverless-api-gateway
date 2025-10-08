@@ -1,5 +1,5 @@
 # Usaman API Gateway Serverless Backend
-![Usaman API Gateway Serverless Backend Flowchart](../backend/flowchart/flowchart.png)
+![Usaman API Gateway Serverless Backend Flowchart](../backend/flowchart/backend.png)
 ## Overview
 
 This project is a Serverless Lambda CRUD API using Node.js and DynamoDB. It allows for managing users with full Create, Read, Update, and Delete operations.
