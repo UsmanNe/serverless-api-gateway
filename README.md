@@ -1,4 +1,4 @@
-git clone https://github.com/username/serverless-api-gateway.git
+git clone https://github.com/UsmanNe/serverless-api-gateway
 cd serverless-api-gateway
 
 # Frontend
