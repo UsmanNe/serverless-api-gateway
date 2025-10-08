@@ -9,7 +9,7 @@ const NotFoundPage = () => {
       <h1 className="display-3">404</h1>
       <h2>Page Not Found</h2>
       <p>The page you are looking for does not exist.</p>
-      <Button variant="primary" onClick={() => navigate("/")}>
+      <Button variant="dark" onClick={() => navigate("/")}>
         Go Home
       </Button>
     </Container>

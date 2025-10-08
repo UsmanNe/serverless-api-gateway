@@ -1,14 +1,17 @@
-import React, { useState } from "react";
-import { Nav, Button } from "react-bootstrap";
+import React from "react";
+import { Nav } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import { House, Speedometer2, QuestionCircle } from "react-bootstrap-icons";
 
 export default function Sidebar() {
-  const [active, setActive] = useState("Home");
-
   const links = [
-    { name: "Home", icon: <House size={18} /> },
-    { name: "Dashboard", icon: <Speedometer2 size={18} /> },
-    { name: "Support Centre", icon: <QuestionCircle size={18} /> },
+    { name: "Home", icon: <House size={18} />, path: "/" },
+    { name: "Dashboard", icon: <Speedometer2 size={18} />, path: "/dashboard" },
+    {
+      name: "Support Centre",
+      icon: <QuestionCircle size={18} />,
+      path: "/support",
+    },
   ];
 
   return (
@@ -20,20 +23,20 @@ export default function Sidebar() {
 
       <Nav className="flex-column gap-2">
         {links.map((link) => (
-          <Nav.Link
+          <NavLink
             key={link.name}
-            onClick={() => setActive(link.name)}
-            active={active === link.name}
-            className={`d-flex align-items-center gap-2 px-3 py-2 rounded ${
-              active === link.name
-                ? "bg-primary text-white fw-bold"
-                : "text-dark nav-hover"
-            }`}
-            style={{ cursor: "pointer", transition: "all 0.2s" }}
+            to={link.path}
+            className={({ isActive }) =>
+              `d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none ${
+                isActive
+                  ? "bg-dark text-white fw-bold"
+                  : "text-dark nav-hover"
+              }`
+            }
           >
             {link.icon}
             <span>{link.name}</span>
-          </Nav.Link>
+          </NavLink>
         ))}
       </Nav>
 
@@ -41,7 +44,7 @@ export default function Sidebar() {
         <div className="d-flex align-items-center gap-2">
           <img
             src="https://images.pexels.com/photos/1666779/pexels-photo-1666779.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt="Usman naeem"
+            alt="Usman Naeem"
             className="rounded-circle"
             style={{ width: "40px", height: "40px" }}
           />

@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 export default function LoadingButton({ loading, children,color, ...props }) {
   return (
     <Button
-      className="btn btn-primary"
+      className="btn btn-dark"
       {...props}
       disabled={loading || props.disabled}
       variant={color}
