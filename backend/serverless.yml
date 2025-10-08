@@ -25,6 +25,19 @@ provider:
 plugins:
   - serverless-offline
 
+custom:
+  corsConfig:
+    origins:
+      - http://localhost:5173
+      - https://serverless-api-gateway.vercel.app
+    headers:
+      - Content-Type
+      - Authorization
+      - X-Amz-Date
+      - X-Api-Key
+      - X-Amz-Security-Token
+    allowCredentials: false
+
 functions:
   createUser:
     handler: src/handlers/createUser.create
@@ -32,13 +45,7 @@ functions:
       - http:
           path: users
           method: post
-          cors:
-            origin:
-              - http://localhost:5173
-              - https://serverless-api-gateway.vercel.app
-            headers:
-              - Content-Type
-            allowCredentials: false
+          cors: ${self:custom.corsConfig}
 
   listUsers:
     handler: src/handlers/listUsers.readAll
@@ -46,13 +53,7 @@ functions:
       - http:
           path: users
           method: get
-          cors:
-            origin:
-              - http://localhost:5173
-              - https://serverless-api-gateway.vercel.app
-            headers:
-              - Content-Type
-            allowCredentials: false
+          cors: ${self:custom.corsConfig}
 
   getUser:
     handler: src/handlers/getUser.read
@@ -60,13 +61,7 @@ functions:
       - http:
           path: users/{userId}
           method: get
-          cors:
-            origin:
-              - http://localhost:5173
-              - https://serverless-api-gateway.vercel.app
-            headers:
-              - Content-Type
-            allowCredentials: false
+          cors: ${self:custom.corsConfig}
 
   updateUser:
     handler: src/handlers/updateUser.update
@@ -74,13 +69,7 @@ functions:
       - http:
           path: users/{userId}
           method: patch
-          cors:
-            origin:
-              - http://localhost:5173
-              - https://serverless-api-gateway.vercel.app
-            headers:
-              - Content-Type
-            allowCredentials: false
+          cors: ${self:custom.corsConfig}
 
   deleteUser:
     handler: src/handlers/deleteUser.delete
@@ -88,13 +77,7 @@ functions:
       - http:
           path: users/{userId}
           method: delete
-          cors:
-            origin:
-              - http://localhost:5173
-              - https://serverless-api-gateway.vercel.app
-            headers:
-              - Content-Type
-            allowCredentials: false
+          cors: ${self:custom.corsConfig}
 
 resources:
   Resources:

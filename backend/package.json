@@ -6,14 +6,17 @@
     "deploy:dev": "sls deploy --stage dev --region us-east-1",
     "deploy:prod": "sls deploy --stage prod --region us-east-1",
     "remove:dev": "sls remove --stage dev",
-    "remove:prod": "sls remove --stage prod"
+    "remove:prod": "sls remove --stage prod",
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.585.0",
     "@aws-sdk/lib-dynamodb": "^3.585.0",
-    "uuid": "^13.0.0"
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
+    "aws-sdk-client-mock": "^4.1.0",
+    "jest": "^30.2.0",
     "serverless-offline": "^14.4.0"
   }
 }

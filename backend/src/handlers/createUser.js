@@ -6,8 +6,8 @@ const {
   validateRequiredFields,
   validateStringValues,
 } = require("../../util");
-const uuidv4 = require("uuid").v4;
 
+const { v4: uuidv4 } = require("uuid");
 const { PutCommand } = require("@aws-sdk/lib-dynamodb");
 
 module.exports.create = async (event) => {
@@ -15,7 +15,7 @@ module.exports.create = async (event) => {
   const { users } = body;
 
   if (!users) {
-    return buildResponse(400, {
+    return buildResponse(event, 400, {
       error: "Missing 'users' object in request body",
     });
   }
@@ -26,10 +26,16 @@ module.exports.create = async (event) => {
   }
 
   // VALIDATIONS
-  let error = checkUsersObject(users);
+  let error = checkUsersObject(users)
   if (error) return error;
 
-  error = validateRequiredFields(users, ["userId", "userName", "userRole"]);
+  error = validateRequiredFields(users, [
+    "userId",
+    "userName",
+    "userRole",
+    "userShift",
+    "userMembershipType",
+  ]);
   if (error) return error;
 
   error = validateStringValues(users);
@@ -41,9 +47,9 @@ module.exports.create = async (event) => {
   // Atempt creating user
   try {
     await docClient.send(new PutCommand(params));
-    return buildResponse(201, users);
+    return buildResponse(event, 201, users);
   } catch (err) {
     console.error("DynamoDB Error:", err);
-    return buildResponse(500, { error: "Could not create user" });
+    return buildResponse(event, 500, { error: "Could not create user" });
   }
 };
